@@ -1,25 +1,43 @@
-SevenPHP
+# SevenPHP
 
 Built majorly with the Seven Library & Packages as a microservice restful framework with the intent to make it easily re-workable for any project (including SwoolePHP). The major focus for the development of the framework is to make most microservice development task as easy as possible while highly performant.
 
 
 # WorkSpace
 All code you'd both write and edit are all in the root's app folder.
-Configuration settings and keys are kept in the 
+Configuration settings and keys are kept in the config/app.php file and are all accessible using the app helper
+```php
+#For example to get your app's url, you can do the following:
+app()->get('APP_URL')
+
+```
 
 
-# Migrations
+# Creating Migrations
+This section shows you how to create :- 
+	*migrate, 
+	*populate, 
+	*drop([ 'id' => dataId ]) to delete data from table, 
+	*drop(string name) to drop table using the name
+
+_methods in every child model class u want to run migration on
+
 Migrations can be added to the corresponding model's migrate method in the form:
 
 ```php
-return [
-		'id' => $this->integer()->max_length(10)->is_null(true)->primary() || ->index('primary') || $this->integer($max_length=10, $null = false, $key='primary'),
-		'name' => $this->string()->max_length(125)->is_null(false) || $this->string($max_length=125, $null=true),
-		'account_balance' => $this->float()->is_null(false) || $this->string($max_length=125, $null=true),
-		'is_verified' => $this->boolean()->default() || $this->boolean($default=),
-		'created_at' => $this->time()->auto_generate(true) || $this->time($auto_generate=true)
-];
+public function migrate(Schema $schema){
+	###
+	return [
+		'id' => $schema->integer()->max_length(10)->is_null(true)->primary() || [ ->key('') || ->index('') ] || $schema->integer($max_length=10, $null = false, $key='primary'),
+		'name' => $schema->string()->max_length(125)->is_null(false) || $schema->string($max_length=125, $null=true),
+		'account_balance' => $schema->float()->is_null(false) || $schema->string($max_length=125, $null=true),
+		'is_verified' => $schema->boolean()->default() || $schema->boolean($default=),
+		'created_at' => $schema->time()->auto_generate(true) || $schema->time($auto_generate=true)
+	];
+	###
+}
 ```
+Note: Id is auto-generated and would be ignored
 
 Populating a table with data can be done by adding array of arrays to the corresponding model's populate method 
 ```php
@@ -74,8 +92,29 @@ parser => validation:
 	*comment is just for you to know what d column holds and as such it's not necessary
 
 
-=>create migrate, populate, drop(by Id), method in every child model class
-=>then run "php Engineer app::migrate modelname" in terminal
+# Single Migration Steps
+
+=> After creating migrations
+
+=>then run "php Engineer app::migrate modelName" in the terminal
+
+# Multi-Migration Generation Steps
+
+=> After creating migrations
+
+=> Add Name of Models to be migrated to the MIGRATION array in the configuration app.php file in the config folder
+
+```php
+'MIGRATION' => [
+	App\\Users::class, App\\Posts::class, App\\Comments::class
+]
+#Always remember to remove already migrated models from the array
+```
+
+=>then run "php Engineer app::migrate *" in the terminal
+
+
+
 
 =>transpiler
 
