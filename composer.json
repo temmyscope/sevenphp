@@ -1,0 +1,50 @@
+{
+    "name": "sevenphp/sevenphp",
+    "description": "High Speed Php Framework For Code Engineers",
+    "type": "project",
+    "version": "v0.9.9",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.3.0",
+        "firebase/php-jwt": "v5.2.0",
+        "sevens/model-trait": "v2.0.0",
+        "sevens/vars": "v2.0.0",
+        "sevens/uploader-trait": "v1.0.0",
+        "sevens/router": "v3.0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "App\\Console\\": "app/Console/",
+            "App\\Http\\": "app/Http/",
+            "App\\Providers\\": "app/Providers/",
+            "App\\Controllers\\": "app/Controllers/"
+        },
+        "files": [
+                "app/Helpers/Helpers.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Elisha Temiloluwa a.k.a TemmyScope",
+            "email": "temmyscope@protonmail.com",
+            "role": "Developer"
+        }
+    ],
+    "scripts": {
+        "post-create-project-cmd": [
+            "@php Engineer app::start"
+        ]
+    },
+    "keywords": [
+        "SevenPHP",
+        "API", "framework",
+        "engineer"
+    ]
+}
