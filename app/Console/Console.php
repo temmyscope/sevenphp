@@ -31,7 +31,7 @@ class Console{
 					}
 					break;
 				case 'app::migrate':
-					self::migrate($argv[2] ?? '*');
+					self::migrate();
 					break;
 				default:
 					print("Invalid Syntax. \n\n");
@@ -43,9 +43,9 @@ class Console{
 		exit();
 	}
 
-	public static function migrate($table)
+	public static function migrate()
 	{
-		return App\Providers\MigrationEngine::run($table);
+		return App\Providers\Schema::run();
 	}
 
 	public static function generateView($name){

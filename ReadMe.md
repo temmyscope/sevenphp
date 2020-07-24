@@ -63,14 +63,6 @@ return [ 'user', 'user_sessions' ]; //drop tables
 
 ```
 
-
-
-# Single Migration Steps
-
-=> After creating migrations
-
-=>then run "php Engineer app::migrate modelName" in the terminal
-
 # Multi-Migration Generation Steps
 
 => After creating migrations
@@ -84,5 +76,4 @@ return [ 'user', 'user_sessions' ]; //drop tables
 #Always remember to remove already migrated models from the array
 ```
 
-=>then run "php Engineer app::migrate *" in the terminal
-
+=>then run "php Engineer app::migrate" in the terminal
