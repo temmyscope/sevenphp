@@ -27,12 +27,21 @@ Migrations can be added to the App\Providers\MigrationEngine migrate method in t
 
 ###
 return [
-	'apps' => [ //table ids are automatically generated as primary keys
-		'token' => $this->foreign_key($table='sessions_table', $column='session'), //the referenced table must already exists the name must be exact to avoid errors
-		'name' => $this->string($max_length=125, $null=true), //$key can be one of [ 'primary', 'unique','fulltext', ''  ]
+	//table ids are automatically generated as primary keys
+	'apps' => [
+		//the referenced table must already exists the name must be exact to avoid errors
+		'token' => $this->foreign_key($table='sessions_table', $column='session'),
+
+		//$key can be one of [ 'primary', 'unique','fulltext', '' ]
+		'name' => $this->string($max_length=125, $null=true),
+
 		'pos' => $this->integer($max_length=10),
-		'account_balance' => $this->double() || $this->float($max_length=16), //in other to specify a maximum length, float should be used instead of a double
+
+		//in other to specify a maximum length, float should be used instead of a double
+		'account_balance' => $this->double() || $this->float($max_length=16), 
+		
 		'is_verified' => $this->oneOf($options=['true', 'false'], $default='false' ),
+		
 		'created_at' => $this->datetime()
 	],
 ];
@@ -46,7 +55,7 @@ Populating a table with data can be done by adding array of arrays to the App\Pr
 ###
 
 return [
-	'table name' => [ 'name' => , 'account_balance' => , 'is_verified' => ],
+	'table name' => [ 'column name' => 'value' , 'column name' => 'value' , 'column name' => 'value' ],
 	'table name' => [...],
 ];
 

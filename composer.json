@@ -7,7 +7,7 @@
     "require": {
         "php": ">=7.3.0",
         "firebase/php-jwt": "v5.2.0",
-        "sevens/model-trait": "v2.0.0",
+        "sevens/model-trait": "v2.1.0",
         "sevens/vars": "v2.0.0",
         "sevens/uploader-trait": "v1.0.0",
         "sevens/router": "v3.0.1"
@@ -16,7 +16,6 @@
         "psr-4": {
             "App\\": "app/",
             "App\\Console\\": "app/Console/",
-            "App\\Http\\": "app/Http/",
             "App\\Providers\\": "app/Providers/",
             "App\\Controllers\\": "app/Controllers/"
         },
@@ -42,9 +41,5 @@
             "@php Engineer app::start"
         ]
     },
-    "keywords": [
-        "SevenPHP",
-        "API", "framework",
-        "engineer"
-    ]
+    "keywords": [ "SevenPHP", "API", "framework", "engineer" ]
 }
