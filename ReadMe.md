@@ -73,7 +73,7 @@ return [
 ### id is auto-generated and would be ignored
 ``` 
 
-# Populating a table with data manually by the developer can be done by adding array of arrays to the App\Providers\MigrationEngine populate method's return array
+Populating a table with data manually by the developer can be done by adding array of arrays to the App\Providers\MigrationEngine populate method's return array
 ```php
 return [
 	'table name' => [ 'column name' => 'value' , 'column name' => 'value' , 'column name' => 'value' ],
