@@ -8,12 +8,12 @@ function request()
 			@$this->data = json_decode( file_get_contents('php://input'), true);
 			@$this->token  = $_SERVER['HTTP_AUTHORIZATION'];
 		}
-		public function get( string $var, bool $b = true)
+		public function get( string $var, bool $sanitized = true)
 		{
-			if($b === false){
-				return $this->data[$var];
+			if($sanitized === false){
+				return $this->data[$var] ?? $_REQUEST[$var];
 			}
-			return (isset($this->data[$var])) ? htmlentities( $this->data[$var], ENT_QUOTES, 'UTF-8') : null;
+			return htmlentities( $this->data[$var] ?? $_REQUEST[$var], ENT_QUOTES, 'UTF-8');
 		}
 		public function set($var, $value)
 		{
@@ -29,11 +29,11 @@ function request()
 		}
 		public function has(string $var): bool
 		{
-			return (isset($this->data[$var]));
+			return (isset($this->data[$var]) || isset($_REQUEST[$var]) );
 		}
 		public function all()
 		{
-			return (array)$this->data;
+			return (array)$this->data ?? $_REQUEST;
 		}
 	};
 }
@@ -148,7 +148,6 @@ function app($config = __DIR__.'/../../config/app.php')
 		public function __call($method, $args){
 			return $this->config[ strtolower($method) ] ?? null;
 		}
-
 		public function get(string $var)
 		{
 			return $this->config[$var] ?? null;

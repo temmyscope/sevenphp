@@ -41,7 +41,7 @@ $route->post('/login', [ AuthController::class, "login" ]);
 $route->post('/register', [ AuthController::class, "register" ]);
 $route->post('/activate', [ AuthController::class, "activate" ]);
 
-$route->group(['name' => 'auth', 'middleware' => [ App\Controllers\AuthController::class, "index"], 'inject' => [ $request ] ],  function($router){
+$route->group(['name' => 'auth', 'middleware' => [ App\Controllers\AuthController::class, "index" ], 'inject' => [ $request ] ],  function($route){
 	$route->get('/search', [ SearchController::class, 'index' ]);
 	$route->get('/home',  [ HomeController::class, 'index' ]);
 	$route->get('/logout', [ AuthController::class, "logout" ]);

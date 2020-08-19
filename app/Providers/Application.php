@@ -24,5 +24,4 @@ class Application{
 		ini_set('opcache.fast_shutdown', 1);
 		ini_set('opcache.enable_cli', 1);
 	}
-	
 }

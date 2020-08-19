@@ -8,7 +8,7 @@ class Session{
 	}
 
 	public static function get($name){
-		return $_SESSION[$name];
+		return $_SESSION[$name] ?? null;
 	}
 
 	public static function set($name, $value){

@@ -13,10 +13,10 @@ class Auth extends Model{
 	{
         $app = app();
 		$iat = time(); //time of token issued at
-		$nbf = $iat + 2; //not before in seconds
+		$nbf = $iat + 5; //not before in seconds
         $exp = ( $long === true ) ? $iat + 2592000 : $iat + 9000; //expiry time of token in seconds
 		$token = [
-			"iss" => $app->get('issuer'), "aud" => $app->get('audience'), "iat" => $iat, "nbf" => $nbf, "exp" => $exp,
+			"iss" => $app->get('ISSUER'), "aud" => $app->get('AUDIENCE'), "iat" => $iat, "nbf" => $nbf, "exp" => $exp,
 			"user_id" => $user->id, "email" => $user->email, "name" => $user->name, "is_verified" => $user->verified
 		];
 		return self::encryptToken($token);
@@ -25,7 +25,7 @@ class Auth extends Model{
 	public static function encryptToken(Array $data): string
 	{
 		$app = app();
-		return JWT::encode( $data, $app->get('secret'), $app->get('jwt_alg') );
+		return JWT::encode( $data, $app->get('PRIVATE_KEY'), $app->get('JWT') );
 	}
 	
 	public static function getUserId($request) : int
@@ -69,7 +69,7 @@ class Auth extends Model{
 	{
 		$app = app();
 		try {
-			$data = (array) JWT::decode($token, $app->get('secret'), [ $app->get('jwt_alg') ]);
+			$data = (array) JWT::decode($token, $app->get('PUBLIC_KEY'), [ $app->get('JWT') ]);
 		} catch (\Exception $e) {
 			$data = [];
 		}
