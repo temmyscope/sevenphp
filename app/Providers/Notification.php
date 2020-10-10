@@ -1,5 +1,5 @@
 <?php
-namespace app\Providers;
+namespace App\Providers;
 
 class Notification{
 

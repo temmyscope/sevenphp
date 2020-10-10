@@ -1,50 +1,83 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: *");
-header("Access-Control-Allow-Headers: *");
+use Seven\Router\Router;
+use Symfony\Component\HttpFoundation\{Request, Response};
+use App\Auth;
+
+$start = microtime(true);
 
 /*
 |---------------------------------------------------------------------------|
-| Register The Auto Loader 													|
+| Register The Auto Loader 																									|
 |---------------------------------------------------------------------------|
 |
 */
 require __DIR__.'/vendor/autoload.php';
 
+$request = Request::createFromGlobals();
+
+$response = new Response();
+
 /**
 * @package  SevenPHP
 * @author   Elisha Temiloluwa <temmyscope@protonmail.com>
 |-------------------------------------------------------------------------------|
-|	SevenPHP by Elisha Temiloluwa a.k.a TemmyScope 								|
+|	SevenPHP by Elisha Temiloluwa a.k.a TemmyScope 																|
 |-------------------------------------------------------------------------------|
 */
 
-$request = request();
+$start = microtime(true);
 
-use Seven\Router\Route;
+$router = new Router('App\Controllers');
 
-$route = new Route('App\Controllers');
+$router->enableCache(__DIR__.'/cache');
 
-$route->enableCache(__DIR__.'/cache');
+$router->registerProviders($request, $response);
 
-$route->setFallback(function(){
-	response("Error 404, Method not Found.", 404);
-}, Route::NOT_FOUND);
-$route->setFallback(function(){
-	response("Error 404, Method not Allowed.", 405);
-}, Route::METHOD_NOT_ALLOWED);
-$route->get('/', function(){
-	response("api version 1, codename V1", 200);
+$router->middleware('cors', function($request, $response, $next){
+		$headers = [
+	      'Access-Control-Allow-Origin'      => '*',
+	      'Access-Control-Allow-Methods'     => '*',
+	      'Access-Control-Allow-Credentials' => 'true',
+	      'Access-Control-Max-Age'           => '86400',
+	      'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With'
+	  ];
+	  if ($request->isMethod('OPTIONS')){
+	      return $response->setHeaders($headers)
+	      ->setContent('{"method":"OPTIONS"}')
+	      ->setStatusCode(200)
+	      ->send();
+	  }
+	  foreach($headers as $key => $value){
+	      $response->headers->set($key, $value);
+	  }
+		$next($request, $response);
 });
 
-$route->post('/login', [ AuthController::class, "login" ]);
-$route->post('/register', [ AuthController::class, "register" ]);
-$route->post('/activate', [ AuthController::class, "activate" ]);
-
-$route->group(['name' => 'auth', 'middleware' => [ App\Controllers\AuthController::class, "index" ], 'inject' => [ $request ] ],  function($route){
-	$route->get('/search', [ SearchController::class, 'index' ]);
-	$route->get('/home',  [ HomeController::class, 'index' ]);
-	$route->get('/logout', [ AuthController::class, "logout" ]);
+$router->middleware('auth', function($request, $response, $next){
+		$token = $request->headers->get('Authorization');
+		if ( !$token || Auth::isValid($token) ) {
+				return $response->setContent('Unauthorized.')
+				->setStatusCode(401)
+				->send();
+		}
+		$request->userId = Auth::getValuesFromToken($token)->user_id;
+		$next->handle($request);
 });
 
-$route->run($_SERVER['REQUEST_METHOD'], $_SERVER['PATH_INFO'] ?? '/');
+$router->middleware('admin', function($request, $response, $next){
+		$token = $request->headers->get('Authorization');
+		$user = App\User::findby([ 'id' =>$request->userId, 'type'=> 'admin', 'deleted'=> 'false', 'verified'=> 'false']);
+		
+		if( empty($user) ){
+				return $response->setContent('Unauthorized.')
+	      ->setStatusCode(401)
+	      ->send();
+		}
+		$next($request, $response);
+});
+
+require __DIR__.'/routes/web.php';
+
+$router->run();
+
+echo "<pre>",microtime(true)-$start;

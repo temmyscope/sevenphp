@@ -1,56 +1,44 @@
 <?php
 
-function request()
-{
-	return new class(){
-		public function __construct()
-		{
-			@$this->data = json_decode( file_get_contents('php://input'), true);
-			@$this->token  = $_SERVER['HTTP_AUTHORIZATION'];
-		}
-		public function get( string $var, bool $sanitized = true)
-		{
-			if($sanitized === false){
-				return $this->data[$var] ?? $_REQUEST[$var];
-			}
-			return htmlentities( $this->data[$var] ?? $_REQUEST[$var], ENT_QUOTES, 'UTF-8');
-		}
-		public function set($var, $value)
-		{
-			$this->data[$var] = $value;
-		}
-		public function getFile($var)
-		{
-			return $_FILES[$var] ?? null;
-		}
-		public function getToken()
-		{
-			return $this->token;
-		}
-		public function has(string $var): bool
-		{
-			return (isset($this->data[$var]) || isset($_REQUEST[$var]) );
-		}
-		public function all()
-		{
-			return (array)$this->data ?? $_REQUEST;
-		}
-	};
+if (!function_exists('redirect')) {
+    function redirect($base_url, $location = ''){
+        $location = $base_url."/{$location}";
+        if(!headers_sent()){ header("location: $location"); exit();
+        }else{
+            echo "<script type='text/javascript'> window.location.href= '{$location}';</script>";
+            echo '<noscript> <meta http-equiv="refresh" content="0;url='.$location.'"/></noscript>'; exit();
+        }
+    }
 }
 
-public function response($data, $code, $format='json')
-{
-	switch ($format) {
-		case 'json':
-			header('Content-Type: application/json; charset=utf-8');
-        	http_response_code($code);
-			return echo json_encode($data, JSON_PRETTY_PRINT);
-		case 'xml':
-			break;
-		case 'html':
-			break;
-		default:
-			break;
+if ( !function_exists('str_contains') ) {
+	function str_contains(string $str, $contain, bool $ignoreCase = false): bool{
+		if ($ignoreCase) {
+        	$str = mb_strtolower($str);
+	    }
+	    $contain = is_array($contain) ? $contain : [$contain];
+	    foreach ($contain as $val) {
+	    	$val = ($ignoreCase) ? mb_strtolower($val) : $val;
+	        if ( mb_strpos($str, $val) !== false ) {
+	            return true;
+	        }
+	    }
+    	return false;
+	}
+}
+
+if ( !function_exists('str_between') ) {
+	function str_between(string $full, string $start, string $stop, bool $ignoreCase = false): string{
+		if ($ignoreCase) {
+	  		$full = mb_strtolower($full); 
+	  		$start = mb_strtolower($start); 
+	  		$stop = mb_strtolower($stop);
+	  	}
+	  	$start_pos = mb_strpos($full, $start);
+	  	if($start_pos === false) return ""; 
+	  	$start_pos += mb_strlen($start); 
+	  	$length = mb_strpos($full, $stop, $start_pos) - $start_pos;
+	  	return mb_substr($full, $start_pos, $length);
 	}
 }
 

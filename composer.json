@@ -7,10 +7,16 @@
     "require": {
         "php": ">=7.3.0",
         "firebase/php-jwt": "v5.2.0",
-        "sevens/model-trait": "v2.1.0",
-        "sevens/vars": "v2.0.0",
+        "guzzlehttp/guzzle": "7.1.1",
+        "nyholm/psr7": "^1.0@dev",
+        "psr/http-message": "^1.0@dev",
+        "psr/http-server-handler": "^1.0@dev",
+        "sevens/model-trait": "^2.0.0",
+        "sevens/router": "v3.1.0",
         "sevens/uploader-trait": "v1.0.0",
-        "sevens/router": "v3.0.1"
+        "sevens/vars": "v2.0.0",
+        "symfony/http-foundation": "^5.2@dev",
+        "symfony/psr-http-message-bridge": "^2.0@dev"
     },
     "autoload": {
         "psr-4": {
