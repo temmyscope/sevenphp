@@ -6,7 +6,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.3.0",
-        "firebase/php-jwt": "v5.2.0",
+        "firebase/php-jwt": "v6.0.0",
         "guzzlehttp/guzzle": "7.1.1",
         "nyholm/psr7": "^1.0@dev",
         "psr/http-message": "^1.0@dev",
